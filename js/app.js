@@ -423,18 +423,26 @@ async function loadFFmpeg() {
 
   ffmpeg.on('log', () => {});
   ffmpeg.on('progress', ({ progress }) => {
-    // per-file progress from ffmpeg (0-1)
     if (window._currentFileProgressEl && progress >= 0 && progress <= 1) {
       const pct = Math.round(progress * 100);
       window._currentFileProgressEl.style.width = `${pct}%`;
     }
   });
 
-  const baseURL = 'https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.6/dist/umd';
-  await ffmpeg.load({
-    coreURL: await toBlobURLSafe(`${baseURL}/ffmpeg-core.js`, 'text/javascript'),
-    wasmURL: await toBlobURLSafe(`${baseURL}/ffmpeg-core.wasm`, 'application/wasm')
-  });
+  // Same-origin assets (fixes Worker CORS on Cloudflare Pages / production)
+  const base = new URL('ffmpeg/', window.location.href).href;
+  const loadOpts = {
+    coreURL: await toBlobURLSafe(base + 'ffmpeg-core.js', 'text/javascript'),
+    wasmURL: await toBlobURLSafe(base + 'ffmpeg-core.wasm', 'application/wasm'),
+  };
+  // Worker also as blob from same origin — avoids cross-origin Worker error
+  try {
+    loadOpts.classWorkerURL = await toBlobURLSafe(base + 'worker.js', 'text/javascript');
+  } catch (e) {
+    console.warn('Worker blob failed, continuing without classWorkerURL', e);
+  }
+
+  await ffmpeg.load(loadOpts);
 
   ffmpegLoaded = true;
 }
@@ -451,9 +459,6 @@ function buildFFmpegArgs(inputName, outputName) {
   if (meta.genre) args.push('-metadata', `genre=${meta.genre}`);
   if (meta.comment) args.push('-metadata', `comment=${meta.comment}`);
 
-  if (document.getElementById('reverse-audio')?.checked) {
-    filters.push('areverse');
-  }
   if (document.getElementById('normalize-audio')?.checked) {
     // loudnorm is heavy; use simple peak normalize for speed/compatibility
     filters.push('loudnorm=I=-16:TP=-1.5:LRA=11');
@@ -759,8 +764,6 @@ function resetToStart() {
   });
   const norm = document.getElementById('normalize-audio');
   if (norm) norm.checked = false;
-  const rev = document.getElementById('reverse-audio');
-  if (rev) rev.checked = false;
   updateConvertButton();
   updateSizeEstimate();
 }

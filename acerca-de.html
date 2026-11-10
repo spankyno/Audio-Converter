@@ -170,43 +170,80 @@
         <span class="w-8 h-8 rounded-lg bg-primary-100 dark:bg-primary-900/50 text-primary-700 dark:text-primary-300 flex items-center justify-center text-sm font-bold">4</span>
         Contacto y enlaces
       </h2>
-      <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 p-6">
-        <p class="text-slate-600 dark:text-slate-400 mb-4">Si tienes sugerencias, has encontrado un error o simplemente quieres decir hola:</p>
-        <ul class="space-y-2">
-          <li>
-            <a href="https://aitorsanchez.pages.dev/" target="_blank" rel="noopener" class="text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 font-medium inline-flex items-center gap-1.5">
-              Blog → aitorsanchez.pages.dev
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
-            </a>
-          </li>
-          <li>
-            <a href="https://aitorhub.vercel.app/" target="_blank" rel="noopener" class="text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 font-medium inline-flex items-center gap-1.5">
-              Aitor Hub → aitorhub.vercel.app
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
-            </a>
-          </li>
-          <li>
-            <a href="https://aitorsanchez.pages.dev/contacto" target="_blank" rel="noopener" class="text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 font-medium inline-flex items-center gap-1.5">
-              Contacto → aitorsanchez.pages.dev/contacto
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
-            </a>
-          </li>
-        </ul>
+      <p class="text-slate-600 dark:text-slate-400 mb-5">Si tienes sugerencias, has encontrado un error o simplemente quieres decir hola:</p>
+      <div class="grid sm:grid-cols-3 gap-3">
+        <a href="https://aitorsanchez.pages.dev/" target="_blank" rel="noopener"
+           class="group flex flex-col items-start gap-3 p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 hover:border-primary-300 dark:hover:border-primary-600 hover:shadow-md transition-all">
+          <div class="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 flex items-center justify-center group-hover:scale-105 transition-transform">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/></svg>
+          </div>
+          <div>
+            <p class="font-semibold text-slate-800 dark:text-slate-100">Blog</p>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5 truncate">aitorsanchez.pages.dev</p>
+          </div>
+          <span class="text-xs font-medium text-primary-600 dark:text-primary-400 inline-flex items-center gap-1 mt-auto">
+            Visitar
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+          </span>
+        </a>
+        <a href="https://aitorhub.vercel.app/" target="_blank" rel="noopener"
+           class="group flex flex-col items-start gap-3 p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 hover:border-primary-300 dark:hover:border-primary-600 hover:shadow-md transition-all">
+          <div class="w-10 h-10 rounded-xl bg-violet-50 dark:bg-violet-900/40 text-violet-600 dark:text-violet-400 flex items-center justify-center group-hover:scale-105 transition-transform">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"/></svg>
+          </div>
+          <div>
+            <p class="font-semibold text-slate-800 dark:text-slate-100">Aitor Hub</p>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5 truncate">aitorhub.vercel.app</p>
+          </div>
+          <span class="text-xs font-medium text-primary-600 dark:text-primary-400 inline-flex items-center gap-1 mt-auto">
+            Visitar
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+          </span>
+        </a>
+        <a href="https://aitorsanchez.pages.dev/contacto" target="_blank" rel="noopener"
+           class="group flex flex-col items-start gap-3 p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 hover:border-primary-300 dark:hover:border-primary-600 hover:shadow-md transition-all">
+          <div class="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-900/40 text-emerald-600 dark:text-emerald-400 flex items-center justify-center group-hover:scale-105 transition-transform">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+          </div>
+          <div>
+            <p class="font-semibold text-slate-800 dark:text-slate-100">Contacto</p>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5 truncate">Formulario de contacto</p>
+          </div>
+          <span class="text-xs font-medium text-primary-600 dark:text-primary-400 inline-flex items-center gap-1 mt-auto">
+            Escribir
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+          </span>
+        </a>
       </div>
     </section>
 
   </main>
 
   <footer class="mt-auto border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
-    <div class="max-w-5xl mx-auto px-4 sm:px-6 py-8">
-      <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
-        <div class="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-sm">
-          <a href="https://aitorsanchez.pages.dev/" target="_blank" rel="noopener" class="text-slate-600 dark:text-slate-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Blog</a>
-          <a href="https://aitorhub.vercel.app/" target="_blank" rel="noopener" class="text-slate-600 dark:text-slate-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Aitor Hub</a>
-          <a href="https://aitorsanchez.pages.dev/contacto" target="_blank" rel="noopener" class="text-slate-600 dark:text-slate-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Contacto</a>
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 py-10">
+      <div class="flex flex-col items-center gap-6">
+        <div class="flex flex-wrap items-center justify-center gap-3">
+          <a href="https://aitorsanchez.pages.dev/" target="_blank" rel="noopener"
+             class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium text-slate-600 dark:text-slate-300 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-primary-300 dark:hover:border-primary-600 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/></svg>
+            Blog
+          </a>
+          <a href="https://aitorhub.vercel.app/" target="_blank" rel="noopener"
+             class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium text-slate-600 dark:text-slate-300 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-primary-300 dark:hover:border-primary-600 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"/></svg>
+            Aitor Hub
+          </a>
+          <a href="https://aitorsanchez.pages.dev/contacto" target="_blank" rel="noopener"
+             class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium text-slate-600 dark:text-slate-300 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-primary-300 dark:hover:border-primary-600 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+            Contacto
+          </a>
         </div>
-        <p class="text-sm text-slate-500 dark:text-slate-500 text-center sm:text-right">
-          Autor: Aitor Sánchez Gutiérrez. © 2026 - Todos los derechos reservados.
+        <div class="w-full max-w-md border-t border-slate-100 dark:border-slate-800"></div>
+        <p class="text-sm text-slate-500 dark:text-slate-500 text-center">
+          Autor: <span class="font-medium text-slate-600 dark:text-slate-400">Aitor Sánchez Gutiérrez</span>
+          <span class="mx-1.5 text-slate-300 dark:text-slate-600">·</span>
+          © 2026 — Todos los derechos reservados
         </p>
       </div>
     </div>
