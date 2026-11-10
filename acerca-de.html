@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="es" class="h-full">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Acerca de — Convertidor de Audio Online</title>
+  <meta name="description" content="Cómo funciona el convertidor de audio, stack tecnológico y compromiso de privacidad." />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            primary: { 50: '#eff6ff', 100: '#dbeafe', 200: '#bfdbfe', 300: '#93c5fd', 400: '#60a5fa', 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8', 800: '#1e40af', 900: '#1e3a8a' }
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <script>
+    (function () {
+      const saved = localStorage.getItem('theme');
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (saved === 'dark' || (!saved && prefersDark)) {
+        document.documentElement.classList.add('dark');
+      }
+    })();
+  </script>
+</head>
+<body class="bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-100 min-h-screen flex flex-col font-sans transition-colors duration-200">
+
+  <!-- Header -->
+  <header class="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 sticky top-0 z-50">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
+      <a href="index.html" class="flex items-center gap-2.5 group">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center shadow-sm group-hover:shadow-md transition-shadow">
+          <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"/>
+          </svg>
+        </div>
+        <span class="font-semibold text-lg text-slate-900 dark:text-white">Convertidor de Audio</span>
+      </a>
+      <div class="flex items-center gap-1 sm:gap-2">
+        <nav class="flex items-center gap-1 sm:gap-2">
+          <a href="index.html" class="px-3 py-2 text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors">Conversor</a>
+          <a href="acerca-de.html" class="px-3 py-2 text-sm font-medium text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/40 rounded-lg">Acerca de</a>
+        </nav>
+        <button id="theme-toggle" type="button" aria-label="Cambiar tema"
+          class="ml-1 p-2 rounded-lg text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+          <svg id="icon-sun" class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
+          </svg>
+          <svg id="icon-moon" class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="flex-1 w-full max-w-3xl mx-auto px-4 sm:px-6 py-10 sm:py-14">
+
+    <h1 class="text-3xl sm:text-4xl font-bold text-slate-900 dark:text-white tracking-tight mb-3">Acerca de esta aplicación</h1>
+    <p class="text-lg text-slate-600 dark:text-slate-400 mb-12">Un convertidor de audio gratuito, rápido y completamente privado que funciona en tu navegador.</p>
+
+    <section class="mb-14">
+      <h2 class="text-xl font-semibold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
+        <span class="w-8 h-8 rounded-lg bg-primary-100 dark:bg-primary-900/50 text-primary-700 dark:text-primary-300 flex items-center justify-center text-sm font-bold">1</span>
+        Cómo funciona (paso a paso)
+      </h2>
+      <ol class="space-y-5">
+        <li class="flex gap-4">
+          <div class="flex-shrink-0 w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 flex items-center justify-center text-sm font-semibold">1</div>
+          <div>
+            <h3 class="font-medium text-slate-800 dark:text-slate-100">Seleccionas tus archivos</h3>
+            <p class="text-slate-600 dark:text-slate-400 text-sm mt-0.5">Arrastra uno o varios archivos de audio o vídeo (o haz clic para elegirlos). Se leen directamente desde tu dispositivo.</p>
+          </div>
+        </li>
+        <li class="flex gap-4">
+          <div class="flex-shrink-0 w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 flex items-center justify-center text-sm font-semibold">2</div>
+          <div>
+            <h3 class="font-medium text-slate-800 dark:text-slate-100">Eliges formato, calidad y metadatos</h3>
+            <p class="text-slate-600 dark:text-slate-400 text-sm mt-0.5">Escoges el formato de salida, el nivel de calidad/bitrate y, si quieres, rellenas título, artista, álbum, año, género y comentario.</p>
+          </div>
+        </li>
+        <li class="flex gap-4">
+          <div class="flex-shrink-0 w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 flex items-center justify-center text-sm font-semibold">3</div>
+          <div>
+            <h3 class="font-medium text-slate-800 dark:text-slate-100">La conversión ocurre en tu navegador</h3>
+            <p class="text-slate-600 dark:text-slate-400 text-sm mt-0.5">Se descarga una versión de FFmpeg compilada a WebAssembly y se ejecuta en un hilo de fondo de tu pestaña. El archivo nunca sale de tu ordenador.</p>
+          </div>
+        </li>
+        <li class="flex gap-4">
+          <div class="flex-shrink-0 w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 flex items-center justify-center text-sm font-semibold">4</div>
+          <div>
+            <h3 class="font-medium text-slate-800 dark:text-slate-100">Descargas el resultado</h3>
+            <p class="text-slate-600 dark:text-slate-400 text-sm mt-0.5">Cuando termina, puedes descargar cada archivo individualmente o todos juntos. Al cerrar la pestaña, todo desaparece de la memoria.</p>
+          </div>
+        </li>
+      </ol>
+    </section>
+
+    <section class="mb-14">
+      <h2 class="text-xl font-semibold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
+        <span class="w-8 h-8 rounded-lg bg-primary-100 dark:bg-primary-900/50 text-primary-700 dark:text-primary-300 flex items-center justify-center text-sm font-bold">2</span>
+        Stack tecnológico
+      </h2>
+      <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 p-6 space-y-4">
+        <div class="flex items-start gap-3">
+          <div class="w-2 h-2 mt-2 rounded-full bg-primary-500"></div>
+          <div>
+            <p class="font-medium text-slate-800 dark:text-slate-100">FFmpeg.wasm</p>
+            <p class="text-sm text-slate-600 dark:text-slate-400">Motor de conversión de código abierto (el mismo que usan VLC y muchos editores profesionales) compilado a WebAssembly para ejecutarse en el navegador.</p>
+          </div>
+        </div>
+        <div class="flex items-start gap-3">
+          <div class="w-2 h-2 mt-2 rounded-full bg-primary-500"></div>
+          <div>
+            <p class="font-medium text-slate-800 dark:text-slate-100">HTML5 + JavaScript moderno + Tailwind CSS</p>
+            <p class="text-sm text-slate-600 dark:text-slate-400">Interfaz ligera, responsive, con modo claro/oscuro y sin frameworks pesados. Todo el código se ejecuta en el cliente.</p>
+          </div>
+        </div>
+        <div class="flex items-start gap-3">
+          <div class="w-2 h-2 mt-2 rounded-full bg-primary-500"></div>
+          <div>
+            <p class="font-medium text-slate-800 dark:text-slate-100">Web Workers</p>
+            <p class="text-sm text-slate-600 dark:text-slate-400">La conversión se realiza en un hilo de fondo para que la interfaz no se congele durante el proceso.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="mb-14">
+      <h2 class="text-xl font-semibold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
+        <span class="w-8 h-8 rounded-lg bg-primary-100 dark:bg-primary-900/50 text-primary-700 dark:text-primary-300 flex items-center justify-center text-sm font-bold">3</span>
+        Compromiso de privacidad
+      </h2>
+      <div class="bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-100 dark:border-emerald-900/50 rounded-xl p-6">
+        <ul class="space-y-3 text-slate-700 dark:text-slate-300">
+          <li class="flex gap-3">
+            <svg class="w-5 h-5 text-emerald-600 dark:text-emerald-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+            <span><strong>Cero subidas.</strong> Tus archivos de audio o vídeo nunca se envían a ningún servidor.</span>
+          </li>
+          <li class="flex gap-3">
+            <svg class="w-5 h-5 text-emerald-600 dark:text-emerald-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+            <span><strong>Procesamiento local.</strong> Toda la conversión ocurre dentro de tu navegador usando WebAssembly.</span>
+          </li>
+          <li class="flex gap-3">
+            <svg class="w-5 h-5 text-emerald-600 dark:text-emerald-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+            <span><strong>Sin almacenamiento.</strong> Al cerrar la pestaña o recargar, los archivos desaparecen de la memoria. No se guardan copias.</span>
+          </li>
+          <li class="flex gap-3">
+            <svg class="w-5 h-5 text-emerald-600 dark:text-emerald-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+            <span><strong>Sin cuentas ni tracking de archivos.</strong> No es necesario registrarse. No se analiza el contenido de tus audios.</span>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="mb-8">
+      <h2 class="text-xl font-semibold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
+        <span class="w-8 h-8 rounded-lg bg-primary-100 dark:bg-primary-900/50 text-primary-700 dark:text-primary-300 flex items-center justify-center text-sm font-bold">4</span>
+        Contacto y enlaces
+      </h2>
+      <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 p-6">
+        <p class="text-slate-600 dark:text-slate-400 mb-4">Si tienes sugerencias, has encontrado un error o simplemente quieres decir hola:</p>
+        <ul class="space-y-2">
+          <li>
+            <a href="https://aitorsanchez.pages.dev/" target="_blank" rel="noopener" class="text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 font-medium inline-flex items-center gap-1.5">
+              Blog → aitorsanchez.pages.dev
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+            </a>
+          </li>
+          <li>
+            <a href="https://aitorhub.vercel.app/" target="_blank" rel="noopener" class="text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 font-medium inline-flex items-center gap-1.5">
+              Aitor Hub → aitorhub.vercel.app
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+            </a>
+          </li>
+          <li>
+            <a href="https://aitorsanchez.pages.dev/contacto" target="_blank" rel="noopener" class="text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 font-medium inline-flex items-center gap-1.5">
+              Contacto → aitorsanchez.pages.dev/contacto
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="mt-auto border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 py-8">
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div class="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-sm">
+          <a href="https://aitorsanchez.pages.dev/" target="_blank" rel="noopener" class="text-slate-600 dark:text-slate-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Blog</a>
+          <a href="https://aitorhub.vercel.app/" target="_blank" rel="noopener" class="text-slate-600 dark:text-slate-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Aitor Hub</a>
+          <a href="https://aitorsanchez.pages.dev/contacto" target="_blank" rel="noopener" class="text-slate-600 dark:text-slate-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Contacto</a>
+        </div>
+        <p class="text-sm text-slate-500 dark:text-slate-500 text-center sm:text-right">
+          Autor: Aitor Sánchez Gutiérrez. © 2026 - Todos los derechos reservados.
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('theme-toggle')?.addEventListener('click', () => {
+      const html = document.documentElement;
+      const isDark = html.classList.toggle('dark');
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    });
+  </script>
+</body>
+</html>

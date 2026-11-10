@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="es" class="h-full">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Convertidor de Audio Online — Gratis y Privado</title>
+  <meta name="description" content="Convierte archivos de audio online de forma gratuita y 100% privada. MP3, WAV, FLAC, M4A, OGG y más. Todo se procesa en tu navegador." />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            primary: { 50: '#eff6ff', 100: '#dbeafe', 200: '#bfdbfe', 300: '#93c5fd', 400: '#60a5fa', 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8', 800: '#1e40af', 900: '#1e3a8a' }
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <script>
+    // Apply theme ASAP to avoid flash
+    (function () {
+      const saved = localStorage.getItem('theme');
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (saved === 'dark' || (!saved && prefersDark)) {
+        document.documentElement.classList.add('dark');
+      }
+    })();
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/@ffmpeg/ffmpeg@0.12.10/dist/umd/ffmpeg.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@ffmpeg/util@0.12.1/dist/umd/util.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+</head>
+<body class="bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-100 min-h-screen flex flex-col font-sans transition-colors duration-200">
+
+  <!-- Header -->
+  <header class="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 sticky top-0 z-50">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
+      <a href="index.html" class="flex items-center gap-2.5 group">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center shadow-sm group-hover:shadow-md transition-shadow">
+          <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"/>
+          </svg>
+        </div>
+        <span class="font-semibold text-lg text-slate-900 dark:text-white">Convertidor de Audio</span>
+      </a>
+      <div class="flex items-center gap-1 sm:gap-2">
+        <nav class="flex items-center gap-1 sm:gap-2">
+          <a href="index.html" class="px-3 py-2 text-sm font-medium text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/40 rounded-lg">Conversor</a>
+          <a href="acerca-de.html" class="px-3 py-2 text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors">Acerca de</a>
+        </nav>
+        <button id="theme-toggle" type="button" aria-label="Cambiar tema"
+          class="ml-1 p-2 rounded-lg text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+          <!-- sun (shown in dark mode) -->
+          <svg id="icon-sun" class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
+          </svg>
+          <!-- moon (shown in light mode) -->
+          <svg id="icon-moon" class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main -->
+  <main class="flex-1 w-full max-w-5xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
+
+    <!-- Hero -->
+    <div class="text-center mb-10">
+      <h1 class="text-3xl sm:text-4xl font-bold text-slate-900 dark:text-white tracking-tight mb-3">
+        Convierte audio online de forma privada
+      </h1>
+      <p class="text-slate-600 dark:text-slate-400 text-lg max-w-2xl mx-auto">
+        MP3, WAV, FLAC, M4A, OGG, WMA, CAF y más. Todo se procesa en tu navegador. Tus archivos nunca salen de tu dispositivo.
+      </p>
+    </div>
+
+    <!-- Drop Zone -->
+    <div id="drop-zone" class="relative border-2 border-dashed border-slate-300 dark:border-slate-600 rounded-2xl bg-white dark:bg-slate-900 p-10 sm:p-14 text-center transition-all duration-200 hover:border-primary-400 dark:hover:border-primary-500 hover:bg-primary-50/30 dark:hover:bg-primary-900/20 cursor-pointer group">
+      <input type="file" id="file-input" multiple accept="audio/*,video/*,.mp3,.wav,.m4a,.flac,.ogg,.aac,.aiff,.amr,.mp2,.wma,.opus,.m4r,.caf,.ac3,.mp4,.mov,.webm,.mkv,.avi" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" />
+      <div class="pointer-events-none">
+        <div class="w-16 h-16 mx-auto mb-5 rounded-2xl bg-primary-100 dark:bg-primary-900/50 flex items-center justify-center group-hover:bg-primary-200 dark:group-hover:bg-primary-800/60 transition-colors">
+          <svg class="w-8 h-8 text-primary-600 dark:text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+          </svg>
+        </div>
+        <p class="text-lg font-medium text-slate-800 dark:text-slate-100 mb-1">Arrastra tus archivos aquí</p>
+        <p class="text-slate-500 dark:text-slate-400 text-sm mb-4">o haz clic para seleccionar · Audio y vídeo · Múltiples archivos</p>
+        <p class="inline-flex items-center gap-1.5 text-xs font-medium text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/30 px-3 py-1.5 rounded-full">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+          Nada se sube. Todo ocurre en tu navegador.
+        </p>
+      </div>
+    </div>
+
+    <!-- File List -->
+    <div id="file-list-container" class="mt-6 hidden">
+      <div class="flex items-center justify-between mb-3">
+        <h2 class="text-sm font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wide">Archivos seleccionados</h2>
+        <button id="clear-all" class="text-sm text-slate-500 dark:text-slate-400 hover:text-red-600 dark:hover:text-red-400 transition-colors">Eliminar todos</button>
+      </div>
+      <ul id="file-list" class="space-y-2"></ul>
+    </div>
+
+    <!-- Conversion Controls -->
+    <div id="controls" class="mt-8 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm p-6 sm:p-8 hidden">
+
+      <!-- Format -->
+      <div class="mb-8">
+        <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-3">Formato de salida</label>
+        <div id="format-buttons" class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-2">
+          <!-- filled by JS -->
+        </div>
+      </div>
+
+      <!-- Quality Slider -->
+      <div class="mb-8">
+        <div class="flex items-center justify-between mb-3">
+          <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Calidad / Bitrate</label>
+          <span id="quality-label" class="text-sm font-medium text-primary-600 dark:text-primary-400">192 kbps</span>
+        </div>
+        <div class="relative">
+          <input type="range" id="quality-slider" min="0" max="4" value="2" step="1"
+                 class="w-full h-2.5 rounded-full appearance-none cursor-pointer quality-slider" />
+          <div class="flex justify-between text-xs text-slate-400 dark:text-slate-500 mt-2 px-0.5">
+            <span>Baja</span>
+            <span>Media</span>
+            <span>Alta</span>
+            <span>Muy alta</span>
+            <span>Máxima</span>
+          </div>
+        </div>
+        <div id="quality-bar" class="mt-3 h-1.5 rounded-full overflow-hidden bg-slate-100 dark:bg-slate-700">
+          <div id="quality-fill" class="h-full rounded-full transition-all duration-300" style="width: 50%; background: linear-gradient(90deg, #f59e0b, #10b981);"></div>
+        </div>
+        <p id="size-estimate" class="mt-2 text-xs text-slate-500 dark:text-slate-400">Tamaño estimado de salida: —</p>
+      </div>
+
+      <!-- Metadata -->
+      <div class="mb-8">
+        <button id="toggle-metadata" type="button" class="flex items-center gap-2 text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors">
+          <svg id="metadata-chevron" class="w-4 h-4 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+          </svg>
+          Metadatos (título, artista, álbum…)
+        </button>
+        <div id="metadata-panel" class="hidden mt-4 pt-4 border-t border-slate-100 dark:border-slate-700 grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1.5">Título</label>
+            <input type="text" id="meta-title" placeholder="Título de la pista"
+              class="w-full rounded-lg border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-800 px-3 py-2 text-sm text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500" />
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1.5">Artista</label>
+            <input type="text" id="meta-artist" placeholder="Nombre del artista"
+              class="w-full rounded-lg border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-800 px-3 py-2 text-sm text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500" />
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1.5">Álbum</label>
+            <input type="text" id="meta-album" placeholder="Nombre del álbum"
+              class="w-full rounded-lg border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-800 px-3 py-2 text-sm text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500" />
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1.5">Año</label>
+            <input type="text" id="meta-year" placeholder="2026" maxlength="4"
+              class="w-full rounded-lg border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-800 px-3 py-2 text-sm text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500" />
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1.5">Género</label>
+            <input type="text" id="meta-genre" placeholder="Pop, Rock, Electrónica…"
+              class="w-full rounded-lg border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-800 px-3 py-2 text-sm text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500" />
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1.5">Comentario</label>
+            <input type="text" id="meta-comment" placeholder="Comentario opcional"
+              class="w-full rounded-lg border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-800 px-3 py-2 text-sm text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Advanced Options -->
+      <div class="mb-8">
+        <button id="toggle-advanced" type="button" class="flex items-center gap-2 text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors">
+          <svg id="advanced-chevron" class="w-4 h-4 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+          </svg>
+          Opciones avanzadas
+        </button>
+        <div id="advanced-panel" class="hidden mt-4 pt-4 border-t border-slate-100 dark:border-slate-700 grid grid-cols-1 sm:grid-cols-2 gap-5">
+          <div>
+            <label class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1.5">Frecuencia de muestreo</label>
+            <select id="sample-rate" class="w-full rounded-lg border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-800 px-3 py-2 text-sm text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-primary-500">
+              <option value="auto">Automática (original)</option>
+              <option value="8000">8 kHz</option>
+              <option value="16000">16 kHz</option>
+              <option value="22050">22.05 kHz</option>
+              <option value="44100">44.1 kHz</option>
+              <option value="48000">48 kHz</option>
+              <option value="96000">96 kHz</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1.5">Canales</label>
+            <select id="channels" class="w-full rounded-lg border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-800 px-3 py-2 text-sm text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-primary-500">
+              <option value="auto">Automático (original)</option>
+              <option value="1">Mono</option>
+              <option value="2">Estéreo</option>
+            </select>
+          </div>
+          <div class="sm:col-span-2 space-y-3">
+            <label class="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300 cursor-pointer">
+              <input type="checkbox" id="reverse-audio" class="rounded border-slate-300 dark:border-slate-600 text-primary-600 focus:ring-primary-500" />
+              Invertir audio (reproducir al revés)
+            </label>
+            <label class="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300 cursor-pointer">
+              <input type="checkbox" id="normalize-audio" class="rounded border-slate-300 dark:border-slate-600 text-primary-600 focus:ring-primary-500" />
+              Normalizar volumen
+              <span class="text-xs text-slate-400 dark:text-slate-500">(recomendado para podcasts y notas de voz)</span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Convert Button -->
+      <button id="convert-btn" disabled
+              class="w-full py-3.5 px-6 rounded-xl bg-primary-600 text-white font-semibold text-base shadow-sm hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+        </svg>
+        Convertir
+      </button>
+    </div>
+
+    <!-- Progress -->
+    <div id="progress-section" class="mt-8 hidden">
+      <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm p-6">
+        <div class="flex items-center justify-between mb-3">
+          <h3 class="font-semibold text-slate-800 dark:text-slate-100">Convirtiendo...</h3>
+          <span id="progress-percent" class="text-sm font-medium text-primary-600 dark:text-primary-400">0%</span>
+        </div>
+        <div class="w-full h-2.5 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden">
+          <div id="progress-bar" class="h-full bg-primary-500 rounded-full transition-all duration-300" style="width: 0%"></div>
+        </div>
+        <p id="progress-status" class="mt-3 text-sm text-slate-500 dark:text-slate-400">Preparando FFmpeg...</p>
+        <ul id="progress-file-list" class="mt-4 space-y-2"></ul>
+      </div>
+    </div>
+
+    <!-- Results -->
+    <div id="results-section" class="mt-8 hidden">
+      <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm p-6">
+        <div class="flex items-center gap-3 mb-5">
+          <div class="w-10 h-10 rounded-full bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center">
+            <svg class="w-5 h-5 text-emerald-600 dark:text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+            </svg>
+          </div>
+          <div>
+            <h3 class="font-semibold text-slate-800 dark:text-slate-100">Conversión completada</h3>
+            <p class="text-sm text-slate-500 dark:text-slate-400">Tus archivos están listos para descargar</p>
+          </div>
+        </div>
+        <ul id="results-list" class="space-y-3 mb-5"></ul>
+        <div class="flex flex-col sm:flex-row gap-3">
+          <button id="download-all" class="flex-1 py-2.5 px-4 rounded-xl bg-primary-600 text-white font-medium hover:bg-primary-700 transition-colors flex items-center justify-center gap-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+            </svg>
+            Descargar todo (ZIP)
+          </button>
+          <button id="convert-more" class="flex-1 py-2.5 px-4 rounded-xl border border-slate-200 dark:border-slate-600 text-slate-700 dark:text-slate-200 font-medium hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
+            Convertir más archivos
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Features -->
+    <section class="mt-16 grid sm:grid-cols-3 gap-6">
+      <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 p-5">
+        <div class="w-10 h-10 rounded-lg bg-blue-100 dark:bg-blue-900/40 flex items-center justify-center mb-3">
+          <svg class="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+          </svg>
+        </div>
+        <h3 class="font-semibold text-slate-800 dark:text-slate-100 mb-1">100% privado</h3>
+        <p class="text-sm text-slate-500 dark:text-slate-400">Los archivos se procesan solo en tu navegador. Nunca se suben a ningún servidor.</p>
+      </div>
+      <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 p-5">
+        <div class="w-10 h-10 rounded-lg bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center mb-3">
+          <svg class="w-5 h-5 text-emerald-600 dark:text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+          </svg>
+        </div>
+        <h3 class="font-semibold text-slate-800 dark:text-slate-100 mb-1">Rápido y gratuito</h3>
+        <p class="text-sm text-slate-500 dark:text-slate-400">Sin límites de uso ni esperas. Conversión instantánea en tu propio dispositivo.</p>
+      </div>
+      <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 p-5">
+        <div class="w-10 h-10 rounded-lg bg-violet-100 dark:bg-violet-900/40 flex items-center justify-center mb-3">
+          <svg class="w-5 h-5 text-violet-600 dark:text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"/>
+          </svg>
+        </div>
+        <h3 class="font-semibold text-slate-800 dark:text-slate-100 mb-1">Muchos formatos</h3>
+        <p class="text-sm text-slate-500 dark:text-slate-400">MP3, WAV, FLAC, M4A, OGG, AAC, WMA, CAF, AIFF, AMR y extracción de audio desde vídeo.</p>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="mt-auto border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 py-8">
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div class="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-sm">
+          <a href="https://aitorsanchez.pages.dev/" target="_blank" rel="noopener" class="text-slate-600 dark:text-slate-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Blog</a>
+          <a href="https://aitorhub.vercel.app/" target="_blank" rel="noopener" class="text-slate-600 dark:text-slate-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Aitor Hub</a>
+          <a href="https://aitorsanchez.pages.dev/contacto" target="_blank" rel="noopener" class="text-slate-600 dark:text-slate-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Contacto</a>
+        </div>
+        <p class="text-sm text-slate-500 dark:text-slate-500 text-center sm:text-right">
+          Autor: Aitor Sánchez Gutiérrez. © 2026 - Todos los derechos reservados.
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
