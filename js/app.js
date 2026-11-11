@@ -1,26 +1,10 @@
-/* Convertidor de Audio — Client-side with FFmpeg.wasm */
+/* Convertidor de Audio — Client-side with FFmpeg.wasm (ESM) */
 
-function getFFmpegClass() {
-  if (typeof FFmpegWASM !== 'undefined' && FFmpegWASM.FFmpeg) return FFmpegWASM.FFmpeg;
-  if (window.FFmpeg && window.FFmpeg.FFmpeg) return window.FFmpeg.FFmpeg;
-  if (typeof FFmpeg !== 'undefined') return FFmpeg;
-  throw new Error('FFmpeg library not loaded');
-}
+let fetchFileFn = null;
 
 async function fetchFileSafe(file) {
-  if (typeof FFmpegUtil !== 'undefined' && FFmpegUtil.fetchFile) {
-    return FFmpegUtil.fetchFile(file);
-  }
+  if (fetchFileFn) return fetchFileFn(file);
   return new Uint8Array(await file.arrayBuffer());
-}
-
-async function toBlobURLSafe(url, mime) {
-  if (typeof FFmpegUtil !== 'undefined' && FFmpegUtil.toBlobURL) {
-    return FFmpegUtil.toBlobURL(url, mime);
-  }
-  const res = await fetch(url);
-  const buf = await res.arrayBuffer();
-  return URL.createObjectURL(new Blob([buf], { type: mime }));
 }
 
 // ---------- State ----------
@@ -414,35 +398,28 @@ function getMetadata() {
 async function loadFFmpeg() {
   if (ffmpegLoaded) return;
 
-  progressStatus.textContent = 'Cargando motor de conversión (FFmpeg)...';
+  progressStatus.textContent = 'Cargando motor de conversión…';
   progressBar.style.width = '5%';
   progressPercent.textContent = '5%';
 
-  const FFmpegCtor = getFFmpegClass();
-  ffmpeg = new FFmpegCtor();
+  const { FFmpeg } = await import('https://cdn.jsdelivr.net/npm/@ffmpeg/ffmpeg@0.12.10/+esm');
+  const util = await import('https://cdn.jsdelivr.net/npm/@ffmpeg/util@0.12.1/+esm');
+  fetchFileFn = util.fetchFile;
 
+  ffmpeg = new FFmpeg();
   ffmpeg.on('log', () => {});
   ffmpeg.on('progress', ({ progress }) => {
     if (window._currentFileProgressEl && progress >= 0 && progress <= 1) {
-      const pct = Math.round(progress * 100);
-      window._currentFileProgressEl.style.width = `${pct}%`;
+      window._currentFileProgressEl.style.width = `${Math.round(progress * 100)}%`;
     }
   });
 
-  // Same-origin assets (fixes Worker CORS on Cloudflare Pages / production)
-  const base = new URL('ffmpeg/', window.location.href).href;
-  const loadOpts = {
-    coreURL: await toBlobURLSafe(base + 'ffmpeg-core.js', 'text/javascript'),
-    wasmURL: await toBlobURLSafe(base + 'ffmpeg-core.wasm', 'application/wasm'),
-  };
-  // Worker also as blob from same origin — avoids cross-origin Worker error
-  try {
-    loadOpts.classWorkerURL = await toBlobURLSafe(base + 'worker.js', 'text/javascript');
-  } catch (e) {
-    console.warn('Worker blob failed, continuing without classWorkerURL', e);
-  }
-
-  await ffmpeg.load(loadOpts);
+  // Blob URLs so the worker is same-origin (avoids cross-origin Worker errors)
+  const baseURL = 'https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.6/dist/esm';
+  await ffmpeg.load({
+    coreURL: await util.toBlobURL(`${baseURL}/ffmpeg-core.js`, 'text/javascript'),
+    wasmURL: await util.toBlobURL(`${baseURL}/ffmpeg-core.wasm`, 'application/wasm'),
+  });
 
   ffmpegLoaded = true;
 }
