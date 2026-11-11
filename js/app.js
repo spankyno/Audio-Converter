@@ -414,9 +414,23 @@ async function loadFFmpeg() {
     }
   });
 
-  // Blob URLs so the worker is same-origin (avoids cross-origin Worker errors)
+  const esm = 'https://cdn.jsdelivr.net/npm/@ffmpeg/ffmpeg@0.12.10/dist/esm';
+  const [workerSrc, constSrc, errorsSrc] = await Promise.all([
+    fetch(`${esm}/worker.js`).then((r) => r.text()),
+    fetch(`${esm}/const.js`).then((r) => r.text()),
+    fetch(`${esm}/errors.js`).then((r) => r.text()),
+  ]);
+  // Bundle the worker so it has no cross-origin imports (browsers block those).
+  const bundled = [
+    constSrc.replace(/^export /gm, ''),
+    errorsSrc.replace(/^export /gm, ''),
+    workerSrc.replace(/^import .+;$/gm, ''),
+  ].join('\n');
+  const classWorkerURL = URL.createObjectURL(new Blob([bundled], { type: 'text/javascript' }));
+
   const baseURL = 'https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.6/dist/esm';
   await ffmpeg.load({
+    classWorkerURL,
     coreURL: await util.toBlobURL(`${baseURL}/ffmpeg-core.js`, 'text/javascript'),
     wasmURL: await util.toBlobURL(`${baseURL}/ffmpeg-core.wasm`, 'application/wasm'),
   });
