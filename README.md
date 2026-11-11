@@ -15,7 +15,7 @@ Aplicación web 100% client-side para convertir archivos de audio (y extraer aud
 ## Cómo usar
 
 1. Abre `index.html` en un servidor local (necesario por las restricciones de CORS/WASM):
-
+ 
 ```bash
 # Con Python
 python -m http.server 8080
