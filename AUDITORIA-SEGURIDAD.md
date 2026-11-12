@@ -10,7 +10,7 @@
 |---|----------|-----------|--------|
 | 1 | Código remoto ejecutado sin verificación (Tailwind Play CDN, FFmpeg/worker desde jsDelivr vía `fetch` + `Blob`, sin SRI) | Alta | ✅ Corregido |
 | 2 | Sin CSP ni cabeceras de seguridad (`_headers` apuntaba a `/ffmpeg/*`, ruta inexistente) | Alta | ✅ Corregido |
-| 3 | Script de terceros (`tracker.js` en workers.dev) con acceso total al DOM junto a los archivos; no declarado en la política de privacidad | Alta | ⚠️ **Decisión tuya** |
+| 3 | Script de terceros (`tracker.js` en workers.dev) con acceso total al DOM junto a los archivos; no declarado en la política de privacidad | Alta | ✅ Declarado en la web · ⏳ guarda del worker pendiente de desplegar |
 | 4 | Google Fonts: cada visita envía la IP a Google (incompatible con el discurso de privacidad; riesgo RGPD) | Media | ✅ Corregido |
 | 5 | Colisión de nombres en ZIP/descargas: `a.wav` + `a.mp3` → ambos `a.flac`, el segundo **pisaba silenciosamente** al primero. Nombres sin sanear (`..`, `\`, caracteres de control) | Media | ✅ Corregido |
 | 6 | Sin límite de tamaño ni de nº de archivos → bloqueo/caída de la pestaña (DoS autoinfligido) | Media | ✅ Corregido |
@@ -34,11 +34,12 @@
 `_headers` incluye ahora: CSP con `default-src 'none'`, sin `unsafe-inline`/`unsafe-eval` (solo `'wasm-unsafe-eval'`), `frame-ancestors 'none'` (anti-clickjacking), `base-uri`/`form-action`/`object-src` cerrados, `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy`, `COOP` y `HSTS`. Para cumplirla se eliminaron todos los `<script>` y `style=""` inline.
 No se activa COOP/COEP *cross-origin isolation*: no hace falta (núcleo monohilo) y rompería el CDN y el tracker.
 
-### 3. Tracker de terceros (Alta) — requiere tu decisión
-`tracker.js` se carga en las dos páginas y, como cualquier script de la página, puede leer nombres de archivo, metadatos escritos e incluso el contenido de los archivos seleccionados. La CSP limita *a dónde* puede enviar datos, no *qué* puede leer. Además `acerca-de` promete privacidad sin mencionarlo, y en España una analítica con identificadores puede requerir consentimiento (RGPD/LSSI). No lo he tocado porque no sé qué recoge. Opciones, de más a menos segura:
-1. Quitarlo de `index.html` y dejarlo solo en `acerca-de.html` (o en otras páginas sin archivos).
-2. Sustituirlo por analítica sin script de terceros (p. ej. Cloudflare Web Analytics, que va en el borde).
-3. Mantenerlo y declararlo en la política de privacidad; validar el `Origin` y limitar tasa en el worker (la `data-key` es pública por diseño).
+### 3. Tracker propio (Alta) — mitigado
+Decisión adoptada: mantener el tracker, declararlo y proteger su endpoint. Es propio y solo recoge la IP del visitante.
+- **Transparencia (hecho):** `acerca-de.html` incluye ahora una sección "Analítica de visitas" (qué se recoge, qué no, responsable, base jurídica —interés legítimo, art. 6.1.f RGPD— y vía para ejercer derechos).
+- **Worker (pendiente de desplegar):** `tracker-guard.js` valida `Origin`, exige que la `data-key` pertenezca a ese origen, limita el tamaño del cuerpo y aplica rate limit por app + IP con el binding nativo `[[ratelimits]]`; CORS solo al origen permitido. Probado con un entorno simulado (11 comprobaciones).
+- **Límites:** `Origin` es falseable desde clientes que no son navegador, así que el control real contra abuso es el rate limit (por ubicación y permisivo, no una cuota exacta). La CSP no cambia lo que el script puede leer en la página: mientras sea tu código y tu worker, el riesgo es el de cualquier script propio.
+- **Pendiente de tu lado:** indicar el plazo de conservación de las IP en la sección de analítica (el RGPD lo pide y yo no lo conozco) y confirmar que no se usan cookies ni almacenamiento en el navegador. Valorar guardar un hash de la IP con sal diaria (`hashIp`) si solo cuentas visitantes únicos.
 
 ### 4–13. Correcciones de código
 Fuentes autoalojadas (Inter latin) · nombres únicos y saneados · límite de 500 MB/archivo y 50 archivos (`MAX_FILE_BYTES`, `MAX_FILES` en `app.js`) · comprobación del código de salida de FFmpeg · extensión restringida a `[a-z0-9]{1,5}` · metadatos limitados en longitud y sin caracteres de control · `localStorage` protegido · URLs de objeto revocadas · `WeakMap` para duraciones · opción **Eliminar metadatos originales** (`-map_metadata -1`).

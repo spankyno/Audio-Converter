@@ -177,9 +177,20 @@
             <span><strong>Sin cuentas ni tracking de archivos.</strong> No es necesario registrarse. No se analiza el contenido de tus audios.</span>
           </li>
           <li class="flex gap-3">
+            <svg class="w-5 h-5 text-emerald-600 dark:text-emerald-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
             <span><strong>Motor verificado.</strong> El motor de conversión se descarga una vez desde un CDN y se comprueba con una huella SHA-384 antes de ejecutarse; el resto del código se sirve desde este mismo sitio.</span>
           </li>
+          <li class="flex gap-3">
+            <svg class="w-5 h-5 text-emerald-600 dark:text-emerald-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+            <span><strong>Analítica de visitas mínima.</strong> Solo se registra la dirección IP del visitante, nunca tus archivos. Más abajo tienes el detalle.</span>
+          </li>
         </ul>
+        <div id="analitica" class="mt-6 pt-5 border-t border-emerald-200 dark:border-emerald-900/50 text-sm text-slate-700 dark:text-slate-300 space-y-2">
+          <h3 class="font-semibold text-slate-900 dark:text-white">Analítica de visitas</h3>
+          <p>Esta web carga un pequeño script de analítica propio, alojado en Cloudflare Workers y gestionado por el autor (Aitor Hub). Su única función es contar visitas y detectar usos abusivos.</p>
+          <p><strong>Qué recoge:</strong> únicamente la dirección IP del visitante. <strong>Qué no recoge:</strong> tus archivos de audio o vídeo, sus nombres, los metadatos que escribas ni ninguna otra información del contenido que conviertes, que permanece siempre en tu navegador.</p>
+          <p><strong>Responsable:</strong> Aitor Sánchez Gutiérrez. <strong>Base jurídica:</strong> interés legítimo (art. 6.1.f RGPD) en conocer el uso del servicio y proteger su seguridad. No se cede a terceros. Puedes ejercer tus derechos de acceso, supresión y oposición a través de la <a href="https://aitorsanchez.pages.dev/contacto" target="_blank" rel="noopener noreferrer" class="underline hover:text-primary-700 dark:hover:text-primary-400">página de contacto</a>.</p>
+        </div>
       </div>
     </section>
 
