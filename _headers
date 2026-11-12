@@ -1,11 +1,15 @@
-/ffmpeg/*
-  Cross-Origin-Resource-Policy: cross-origin
-  Access-Control-Allow-Origin: *
+# Cabeceras de seguridad para Cloudflare Pages (https://developers.cloudflare.com/pages/configuration/headers/)
+/*
+  Content-Security-Policy: default-src 'none'; script-src 'self' 'wasm-unsafe-eval' https://aitors-hub-dashboard.asanchezgu.workers.dev; style-src 'self'; img-src 'self' https://aitors-hub-dashboard.asanchezgu.workers.dev; font-src 'self'; media-src blob:; connect-src 'self' blob: https://cdn.jsdelivr.net https://aitors-hub-dashboard.asanchezgu.workers.dev; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; upgrade-insecure-requests
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: accelerometer=(), camera=(), geolocation=(), gyroscope=(), microphone=(), payment=(), usb=(), interest-cohort=()
+  Cross-Origin-Opener-Policy: same-origin
+  Strict-Transport-Security: max-age=31536000; includeSubDomains
 
-/ffmpeg/*.wasm
-  Content-Type: application/wasm
+# Dependencias versionadas en la ruta: se pueden cachear para siempre
+/vendor/*
   Cache-Control: public, max-age=31536000, immutable
-
-/ffmpeg/*.js
-  Content-Type: application/javascript
+/fonts/*
   Cache-Control: public, max-age=31536000, immutable

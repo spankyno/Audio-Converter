@@ -1,0 +1,13 @@
+{
+  "name": "audio-converter",
+  "version": "1.1.0",
+  "private": true,
+  "description": "Convertidor de audio 100% en el navegador (FFmpeg.wasm)",
+  "scripts": {
+    "build:css": "tailwindcss -c tailwind.config.js -i src/input.css -o css/styles.css --minify",
+    "dev": "npx serve ."
+  },
+  "devDependencies": {
+    "tailwindcss": "3.4.17"
+  }
+}

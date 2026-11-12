@@ -45,37 +45,11 @@
     ]
   }
   </script>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          colors: {
-            primary: { 50: '#eff6ff', 100: '#dbeafe', 200: '#bfdbfe', 300: '#93c5fd', 400: '#60a5fa', 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8', 800: '#1e40af', 900: '#1e3a8a' }
-          },
-          fontFamily: {
-            sans: ['Inter', 'system-ui', 'sans-serif']
-          }
-        }
-      }
-    }
-  </script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/svg+xml" href="public/favicon.svg" />
+  <meta name="theme-color" content="#2563eb" />
+  <script src="js/theme.js"></script>
   <link rel="stylesheet" href="css/styles.css">
-  <script>
-    // Apply theme ASAP to avoid flash
-    (function () {
-      const saved = localStorage.getItem('theme');
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      if (saved === 'dark' || (!saved && prefersDark)) {
-        document.documentElement.classList.add('dark');
-      }
-    })();
-  </script>
-  <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+  <script src="vendor/jszip-3.10.1/jszip.min.js" defer></script>
   <script src="https://aitors-hub-dashboard.asanchezgu.workers.dev/tracker.js"
           data-app="audio-converter"
           data-key="ak_850b28ee71814b97b1c9be7d33afe5ed"
@@ -129,8 +103,8 @@
     </div>
 
     <!-- Drop Zone -->
-    <div id="drop-zone" class="relative border-2 border-dashed border-slate-300 dark:border-slate-600 rounded-2xl bg-white dark:bg-slate-900 p-10 sm:p-14 text-center transition-all duration-200 hover:border-primary-400 dark:hover:border-primary-500 hover:bg-primary-50/30 dark:hover:bg-primary-900/20 cursor-pointer group">
-      <input type="file" id="file-input" multiple accept="audio/*,video/*,.mp3,.wav,.m4a,.flac,.ogg,.aac,.aiff,.amr,.mp2,.wma,.opus,.m4r,.caf,.ac3,.mp4,.mov,.webm,.mkv,.avi" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" />
+    <div id="drop-zone" class="relative border-2 border-dashed border-slate-300 dark:border-slate-600 rounded-2xl bg-white dark:bg-slate-900 p-10 sm:p-14 text-center transition-all duration-200 hover:border-primary-400 dark:hover:border-primary-500 hover:bg-primary-50/30 dark:hover:bg-primary-900/20 cursor-pointer group focus-within:ring-2 focus-within:ring-primary-500">
+      <input type="file" id="file-input" aria-label="Seleccionar archivos de audio o vídeo" multiple accept="audio/*,video/*,.mp3,.wav,.m4a,.flac,.ogg,.aac,.aiff,.amr,.mp2,.wma,.opus,.m4r,.caf,.ac3,.mp4,.mov,.webm,.mkv,.avi" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" />
       <div class="pointer-events-none">
         <div class="w-16 h-16 mx-auto mb-5 rounded-2xl bg-primary-100 dark:bg-primary-900/50 flex items-center justify-center group-hover:bg-primary-200 dark:group-hover:bg-primary-800/60 transition-colors">
           <svg class="w-8 h-8 text-primary-600 dark:text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -145,6 +119,9 @@
         </p>
       </div>
     </div>
+
+    <noscript><p class="mt-4 text-center text-sm text-red-600">Esta aplicación necesita JavaScript activado para convertir audio en tu navegador.</p></noscript>
+    <div id="notice" role="alert" class="hidden mt-4 whitespace-pre-line rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800 dark:border-amber-900/50 dark:bg-amber-950/40 dark:text-amber-200"></div>
 
     <!-- File List -->
     <div id="file-list-container" class="mt-6 hidden">
@@ -173,7 +150,7 @@
           <span id="quality-label" class="text-sm font-medium text-primary-600 dark:text-primary-400">192 kbps</span>
         </div>
         <div class="relative">
-          <input type="range" id="quality-slider" min="0" max="4" value="2" step="1"
+          <input type="range" id="quality-slider" aria-label="Calidad / Bitrate" min="0" max="4" value="2" step="1"
                  class="w-full h-2.5 rounded-full appearance-none cursor-pointer quality-slider" />
           <div class="flex justify-between text-xs text-slate-400 dark:text-slate-500 mt-2 px-0.5">
             <span>Baja</span>
@@ -184,7 +161,7 @@
           </div>
         </div>
         <div id="quality-bar" class="mt-3 h-1.5 rounded-full overflow-hidden bg-slate-100 dark:bg-slate-700">
-          <div id="quality-fill" class="h-full rounded-full transition-all duration-300" style="width: 50%; background: linear-gradient(90deg, #f59e0b, #10b981);"></div>
+          <div id="quality-fill" class="h-full rounded-full transition-all duration-300"></div>
         </div>
         <p id="size-estimate" class="mt-2 text-xs text-slate-500 dark:text-slate-400">Tamaño estimado de salida: —</p>
       </div>
@@ -200,32 +177,32 @@
         <div id="metadata-panel" class="hidden mt-4 pt-4 border-t border-slate-100 dark:border-slate-700 grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1.5">Título</label>
-            <input type="text" id="meta-title" placeholder="Título de la pista"
+            <input type="text" id="meta-title" aria-label="Título" placeholder="Título de la pista"
               class="w-full rounded-lg border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-800 px-3 py-2 text-sm text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500" />
           </div>
           <div>
             <label class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1.5">Artista</label>
-            <input type="text" id="meta-artist" placeholder="Nombre del artista"
+            <input type="text" id="meta-artist" aria-label="Artista" placeholder="Nombre del artista"
               class="w-full rounded-lg border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-800 px-3 py-2 text-sm text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500" />
           </div>
           <div>
             <label class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1.5">Álbum</label>
-            <input type="text" id="meta-album" placeholder="Nombre del álbum"
+            <input type="text" id="meta-album" aria-label="Álbum" placeholder="Nombre del álbum"
               class="w-full rounded-lg border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-800 px-3 py-2 text-sm text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500" />
           </div>
           <div>
             <label class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1.5">Año</label>
-            <input type="text" id="meta-year" placeholder="2026" maxlength="4"
+            <input type="text" id="meta-year" aria-label="Año" placeholder="2026" maxlength="4"
               class="w-full rounded-lg border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-800 px-3 py-2 text-sm text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500" />
           </div>
           <div>
             <label class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1.5">Género</label>
-            <input type="text" id="meta-genre" placeholder="Pop, Rock, Electrónica…"
+            <input type="text" id="meta-genre" aria-label="Género" placeholder="Pop, Rock, Electrónica…"
               class="w-full rounded-lg border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-800 px-3 py-2 text-sm text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500" />
           </div>
           <div>
             <label class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1.5">Comentario</label>
-            <input type="text" id="meta-comment" placeholder="Comentario opcional"
+            <input type="text" id="meta-comment" aria-label="Comentario" placeholder="Comentario opcional"
               class="w-full rounded-lg border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-800 px-3 py-2 text-sm text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500" />
           </div>
         </div>
@@ -242,7 +219,7 @@
         <div id="advanced-panel" class="hidden mt-4 pt-4 border-t border-slate-100 dark:border-slate-700 grid grid-cols-1 sm:grid-cols-2 gap-5">
           <div>
             <label class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1.5">Frecuencia de muestreo</label>
-            <select id="sample-rate" class="w-full rounded-lg border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-800 px-3 py-2 text-sm text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-primary-500">
+            <select id="sample-rate" aria-label="Frecuencia de muestreo" class="w-full rounded-lg border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-800 px-3 py-2 text-sm text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-primary-500">
               <option value="auto">Automática (original)</option>
               <option value="8000">8 kHz</option>
               <option value="16000">16 kHz</option>
@@ -254,7 +231,7 @@
           </div>
           <div>
             <label class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1.5">Canales</label>
-            <select id="channels" class="w-full rounded-lg border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-800 px-3 py-2 text-sm text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-primary-500">
+            <select id="channels" aria-label="Canales" class="w-full rounded-lg border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-800 px-3 py-2 text-sm text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-primary-500">
               <option value="auto">Automático (original)</option>
               <option value="1">Mono</option>
               <option value="2">Estéreo</option>
@@ -265,6 +242,13 @@
               <input type="checkbox" id="normalize-audio" class="rounded border-slate-300 dark:border-slate-600 text-primary-600 focus:ring-primary-500" />
               Normalizar volumen
               <span class="text-xs text-slate-400 dark:text-slate-500">(recomendado para podcasts y notas de voz)</span>
+            </label>
+          </div>
+          <div class="sm:col-span-2">
+            <label class="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300 cursor-pointer">
+              <input type="checkbox" id="strip-metadata" class="rounded border-slate-300 dark:border-slate-600 text-primary-600 focus:ring-primary-500" />
+              Eliminar metadatos originales
+              <span class="text-xs text-slate-400 dark:text-slate-500">(etiquetas, ubicación, dispositivo…)</span>
             </label>
           </div>
         </div>
@@ -287,11 +271,12 @@
           <h3 class="font-semibold text-slate-800 dark:text-slate-100">Convirtiendo...</h3>
           <span id="progress-percent" class="text-sm font-medium text-primary-600 dark:text-primary-400">0%</span>
         </div>
-        <div class="w-full h-2.5 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden">
-          <div id="progress-bar" class="h-full bg-primary-500 rounded-full transition-all duration-300" style="width: 0%"></div>
+        <div class="w-full h-2.5 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden" role="progressbar" aria-label="Progreso de la conversión" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+          <div id="progress-bar" class="h-full w-0 bg-primary-500 rounded-full transition-all duration-300"></div>
         </div>
-        <p id="progress-status" class="mt-3 text-sm text-slate-500 dark:text-slate-400">Preparando FFmpeg...</p>
+        <p id="progress-status" aria-live="polite" class="mt-3 text-sm text-slate-500 dark:text-slate-400">Preparando FFmpeg...</p>
         <ul id="progress-file-list" class="mt-4 space-y-2"></ul>
+        <button id="cancel-btn" type="button" class="mt-4 text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-red-600 dark:hover:text-red-400 transition-colors">Cancelar conversión</button>
       </div>
     </div>
 
@@ -359,11 +344,11 @@
   <!-- Footer -->
   <footer class="mt-auto border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
     <div class="max-w-5xl mx-auto px-4 sm:px-6 py-3 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-sm text-slate-500 dark:text-slate-400">
-      <a href="https://aitorsanchez.pages.dev/" target="_blank" rel="noopener" class="hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Blog</a>
+      <a href="https://aitorsanchez.pages.dev/" target="_blank" rel="noopener noreferrer" class="hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Blog</a>
       <span class="text-slate-300 dark:text-slate-600" aria-hidden="true">·</span>
-      <a href="https://aitorhub.vercel.app/" target="_blank" rel="noopener" class="hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Aitor Hub</a>
+      <a href="https://aitorhub.vercel.app/" target="_blank" rel="noopener noreferrer" class="hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Aitor Hub</a>
       <span class="text-slate-300 dark:text-slate-600" aria-hidden="true">·</span>
-      <a href="https://aitorsanchez.pages.dev/contacto" target="_blank" rel="noopener" class="hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Contacto</a>
+      <a href="https://aitorsanchez.pages.dev/contacto" target="_blank" rel="noopener noreferrer" class="hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Contacto</a>
       <span class="text-slate-300 dark:text-slate-600" aria-hidden="true">·</span>
       <span>Aitor Sánchez Gutiérrez © 2026</span>
     </div>
